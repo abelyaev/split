@@ -29,7 +29,6 @@
     <string name="empty_RC">Resource Center is empty. Would You like to fetch its content from the web?</string>
     <string name="inactive_connection">Please check Your connection status</string>
     <string name="fetching">Fetching...</string>
-    <string name="resource_text">Some text some text some text some text some text some text some text some text some text some text some text some text some text some text some text some text some text some text some text some text some text some text some text some text some text some text some text some text some text some text some text some text some text some text some text some text some text some text some text some text some text some text some text some text some text some text</string>
     
     <string name="new_rc">New Resource Center item received</string>
     <string name="new_wm">New Wagner Meters item received</string>
@@ -37,5 +36,8 @@
     <string name="new_push">New push notification item received</string>
     
     <string name="not_impl">This feature is not implemented yet...</string>
+    
+    <string name="read_more">Read more...</string>
+    <string name="back">back</string>
 
 </resources>

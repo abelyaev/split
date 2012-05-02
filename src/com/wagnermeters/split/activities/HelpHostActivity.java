@@ -32,14 +32,16 @@ public class HelpHostActivity extends ActivityGroup {
 	public void onResume() {
 		super.onResume();
 		
+		int pending_tab = ((TabsActivity)getParent()).pending_tab;
 		int r_id = ((TabsActivity)getParent()).r_id;
-		if(r_id != 0) {
+		if(r_id != 0 && pending_tab == 3) {
 			shareTab("Resource", ResourceActivity.class, r_id);
 		}
 	}
 	
 	public void shareTab(String tag, Class<?> activity, int id) {
 		Intent i = new Intent(this, activity);
+		i.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
 		i.putExtra("id", id);
 		i.putExtra("pid", 2);
 		View view = getLocalActivityManager().startActivity(tag, i).getDecorView();

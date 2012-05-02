@@ -8,12 +8,11 @@
     android:paddingBottom="10dp">
     <LinearLayout
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical">
         <ImageView
     		android:layout_width="fill_parent"
         	android:layout_height="wrap_content"
-        	android:gravity="center"
         	android:paddingLeft="20dp"
     		android:paddingRight="20dp"
     		android:paddingTop="10dp"
@@ -21,8 +20,12 @@
         	android:src="@drawable/calc_title" />
         <LinearLayout
         	android:layout_width="fill_parent"
-        	android:layout_height="300dp"
+        	android:layout_height="wrap_content"
         	android:orientation="vertical"
+        	android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingTop="20dp"
+            android:paddingBottom="20dp"
         	android:background="@drawable/substrate">
 			<LinearLayout
         		android:layout_width="fill_parent"
@@ -31,21 +34,28 @@
     			android:paddingRight="10dp"
     			android:paddingTop="20dp"
     			android:paddingBottom="20dp">
-    			<ImageView
-    				android:layout_width="fill_parent"
-        			android:layout_height="35dp"
-        			android:gravity="left"
-					android:layout_weight="4"
-        			android:src="@drawable/calc_h_title" />
+    			<LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="40dp"
+                    android:layout_weight="5"
+                    android:gravity="center_vertical">
+                    <TextView
+                        android:layout_width="100dp"
+                        android:layout_height="wrap_content"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        android:text="@string/rel_hum" />
+                </LinearLayout>
         		<EditText
             		android:id="@+id/rel_hum"
             		android:layout_width="fill_parent"
             		android:layout_height="40dp"
-            		android:layout_weight="2"
+            		android:layout_weight="3"
             		android:padding="10dp"
             		android:gravity="center"
             		android:numeric="integer"
             		android:maxLength="5"
+            		android:textColor="@android:color/white"
             		android:background="@drawable/calc_input_default" />
         	</LinearLayout>
         	<LinearLayout
@@ -55,21 +65,28 @@
     			android:paddingRight="10dp"
     			android:paddingTop="20dp"
     			android:paddingBottom="20dp">
-    			<ImageView
-    				android:layout_width="fill_parent"
-        			android:layout_height="35dp"
-        			android:gravity="left"
-					android:layout_weight="4"
-        			android:src="@drawable/calc_t_title" />
+    			<LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="40dp"
+                    android:layout_weight="5"
+                    android:gravity="center_vertical">
+                    <TextView
+                        android:layout_width="100dp"
+                        android:layout_height="wrap_content"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        android:text="@string/amb_temp" />
+                </LinearLayout>
         		<EditText
             		android:id="@+id/amb_temp"
             		android:layout_width="fill_parent"
             		android:layout_height="40dp"
-            		android:layout_weight="2"
+            		android:layout_weight="3"
             		android:padding="10dp"
             		android:gravity="center"
             		android:numeric="integer"
             		android:maxLength="5"
+            		android:textColor="@android:color/white"
             		android:background="@drawable/calc_input_default" />
         	</LinearLayout>
         	<LinearLayout
@@ -79,21 +96,28 @@
     			android:paddingRight="10dp"
     			android:paddingTop="20dp"
     			android:paddingBottom="20dp">
-    			<ImageView
-    				android:layout_width="fill_parent"
-        			android:layout_height="16dp"
-        			android:gravity="left"
-					android:layout_weight="4"
-        			android:src="@drawable/calc_w_title" />
+    			<LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="40dp"
+                    android:layout_weight="5"
+                    android:gravity="center_vertical">
+                    <TextView
+                        android:layout_width="100dp"
+                        android:layout_height="wrap_content"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        android:text="@string/emc" />
+                </LinearLayout>
         		<EditText
             		android:id="@+id/emc"
             		android:layout_width="fill_parent"
             		android:layout_height="40dp"
-            		android:layout_weight="2"
+            		android:layout_weight="3"
             		android:padding="10dp"
             		android:gravity="center"
             		android:numeric="decimal"
             		android:maxLength="5"
+            		android:textColor="@android:color/white"
             		android:background="@drawable/calc_input_default" />
         	</LinearLayout>
         <LinearLayout
@@ -105,13 +129,17 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/get_emc" />
+                android:text="@string/get_emc"
+                android:textColor="@android:color/white"
+                android:background="@drawable/calc_button" />
             <Button
                 android:id="@+id/get_temp"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/get_temp" />
+                android:text="@string/get_temp"
+                android:textColor="@android:color/white"
+                android:background="@drawable/calc_button" />
         </LinearLayout>
         </LinearLayout>
     </LinearLayout>

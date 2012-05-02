@@ -120,7 +120,7 @@ public class FetchService extends Service {
 					JSONArray articles = response.getJSONArray("articles");
 					JSONObject article;
 					length = articles.length();
-					if(last_sync == 0 && length > 0) {
+					if(last_sync != 0 && length > 0) {
 						notifications = new Bundle();
 						notifications.putInt("length", length);
 					}
@@ -168,7 +168,7 @@ public class FetchService extends Service {
 						}
 						c.close();
 						
-						if(last_sync == 0) {
+						if(last_sync != 0) {
 							String[] notification = new String[] {
 								Integer.toString(article.getInt("section_id")),
 								Integer.toString(article.getInt("nid")),
@@ -184,7 +184,7 @@ public class FetchService extends Service {
 				}
 				
 				SharedPreferences.Editor editor = prefs.edit();
-				editor.putLong(LAST_RC_PREF, System.currentTimeMillis());
+				editor.putLong(LAST_RC_PREF, System.currentTimeMillis() / 1000);
 				editor.commit();
 
 				Message msg = h.obtainMessage();
@@ -227,7 +227,7 @@ public class FetchService extends Service {
 				intent.setData(Uri.parse(notification_data[3]));
 		}
 		
-        Notification notification = new Notification(android.R.drawable.ic_popup_reminder, title, System.currentTimeMillis());
+        Notification notification = new Notification(R.drawable.icon, title, System.currentTimeMillis());
         int id = (int)(Math.random() * 1000);
         PendingIntent contentIntent = PendingIntent.getActivity(this, id, intent, 0);
         notification.setLatestEventInfo(this, title, notification_data[2], contentIntent);

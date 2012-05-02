@@ -2,7 +2,10 @@ package com.wagnermeters.split.activities;
 
 import android.app.TabActivity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TabHost;
 
@@ -13,13 +16,15 @@ public class TabsActivity extends TabActivity {
 	
 	private TabHost tabs;
 	
-	private int pending_tab = 0;
+	protected int pending_tab = 0;
 	
 	protected int r_id = 0;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.tabs);
+        
+        startService(new Intent(this, FetchService.class));
 
         tabs = getTabHost();
         Bundle extra;
@@ -38,16 +43,15 @@ public class TabsActivity extends TabActivity {
         tabs.addTab(createTab(tabs, "3", R.string.help_label, R.drawable.help_tab, HelpHostActivity.class, extra));
         tabs.setCurrentTab(0);
         
-        //int contentHeight = getWindowManager().getDefaultDisplay().getHeight() - 0;        
-        //FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.FILL_PARENT, contentHeight);
-        //findViewById(android.R.id.tabhost).setLayoutParams(lp);
-        startService(new Intent(this, FetchService.class));
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        int contentHeight = getWindowManager().getDefaultDisplay().getHeight() - prefs.getInt("status_bar_height", 0);        
+        FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.FILL_PARENT, contentHeight);
+        findViewById(android.R.id.tabhost).setLayoutParams(lp);
     }
     
     public void onResume() {
     	super.onResume();
 
-    	//tabs.setCurrentTab((pending_tab != 0 || force_pending_tab) ? pending_tab : getIntent().getIntExtra("section", 0));
     	if(r_id == 0) {
     		r_id = getIntent().getIntExtra("r_id", 0);
     	}
@@ -73,8 +77,8 @@ public class TabsActivity extends TabActivity {
     	
     	spec = tabs.newTabSpec(tag);
     	ImageView indicator = new ImageView(this);
-    	indicator.setImageResource(icon);
-    	indicator.setScaleType(ImageView.ScaleType.FIT_END);
+    	indicator.setBackgroundResource(icon);
+    	//indicator.setScaleType(ImageView.ScaleType.FIT_END);
     	indicator.setPadding(1, 0, 1, 0);
         spec.setIndicator(indicator);
         if(extra == null) {

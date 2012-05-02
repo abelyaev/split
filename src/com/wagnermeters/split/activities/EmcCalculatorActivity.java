@@ -3,12 +3,14 @@ package com.wagnermeters.split.activities;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.DecimalFormat;
+import java.util.Locale;
 
 import android.app.Activity;
 import android.content.ContentProviderClient;
 import android.content.ContentValues;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -21,7 +23,7 @@ import android.widget.Toast;
 import com.wagnermeters.split.R;
 import com.wagnermeters.split.cproviders.SplitProvider;
 
-public class EmcCalculatorActivity extends Activity {
+public class EmcCalculatorActivity extends Activity implements View.OnFocusChangeListener {
 	
 	private static int MIN_H = 0;
 	
@@ -33,7 +35,7 @@ public class EmcCalculatorActivity extends Activity {
 	
 	private static int MAX_T = 150;
 	
-	private static int T_STEP = 5;
+	private static int T_STEP = 1;
 	
 	private static int MIN_W = 0;
 	
@@ -47,21 +49,36 @@ public class EmcCalculatorActivity extends Activity {
         
         findViewById(R.id.get_emc).setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				String rel_hum = ((EditText)findViewById(R.id.rel_hum)).getText().toString();
-				String amb_temp = ((EditText)findViewById(R.id.amb_temp)).getText().toString();
+				EditText rh_input = (EditText)findViewById(R.id.rel_hum);
+				EditText at_input = (EditText)findViewById(R.id.amb_temp);
+				String rel_hum = rh_input.getText().toString();
+				String amb_temp = at_input.getText().toString();
 				if(rel_hum.length() == 0) {
+					rh_input.setBackgroundResource(R.drawable.calc_input_error);
+					rh_input.setTextColor(Color.RED);
 					Toast.makeText(EmcCalculatorActivity.this, getString(R.string.rel_hum_empty), Toast.LENGTH_SHORT).show();
 				} else if(amb_temp.length() == 0) {
+					at_input.setBackgroundResource(R.drawable.calc_input_error);
+					at_input.setTextColor(Color.RED);
 					Toast.makeText(EmcCalculatorActivity.this, getString(R.string.amb_temp_empty), Toast.LENGTH_SHORT).show();
 				} else {
 					float T = Float.parseFloat(amb_temp);
 					float h = Float.parseFloat(rel_hum);
 					
 					if(T < MIN_T || T > MAX_T) {
+						at_input.setBackgroundResource(R.drawable.calc_input_error);
+						at_input.setTextColor(Color.RED);
 						Toast.makeText(EmcCalculatorActivity.this, getString(R.string.amb_temp_wrong), Toast.LENGTH_SHORT).show();
 					} else if(h < MIN_H || h > MAX_H) {
+						rh_input.setBackgroundResource(R.drawable.calc_input_error);
+						rh_input.setTextColor(Color.RED);
 						Toast.makeText(EmcCalculatorActivity.this, getString(R.string.rel_hum_wrong), Toast.LENGTH_SHORT).show();
 					} else {
+						at_input.setBackgroundResource(R.drawable.calc_input_default);
+						at_input.setTextColor(Color.WHITE);
+						rh_input.setBackgroundResource(R.drawable.calc_input_default);
+						rh_input.setTextColor(Color.WHITE);
+
 						((EditText)findViewById(R.id.emc)).setText(calculateEMC(h, T));
 					}
 				}
@@ -70,26 +87,57 @@ public class EmcCalculatorActivity extends Activity {
         
         findViewById(R.id.get_temp).setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				String rel_hum = ((EditText)findViewById(R.id.rel_hum)).getText().toString();
-				String emc = ((EditText)findViewById(R.id.emc)).getText().toString();
+				EditText rh_input = (EditText)findViewById(R.id.rel_hum);
+				EditText emc_input = (EditText)findViewById(R.id.emc);
+				String rel_hum = rh_input.getText().toString();
+				String emc = emc_input.getText().toString();
 				if(rel_hum.length() == 0) {
+					rh_input.setBackgroundResource(R.drawable.calc_input_error);
+					rh_input.setTextColor(Color.RED);
 					Toast.makeText(EmcCalculatorActivity.this, getString(R.string.rel_hum_empty), Toast.LENGTH_SHORT).show();
 				} else if(emc.length() == 0) {
+					emc_input.setBackgroundResource(R.drawable.calc_input_error);
+					emc_input.setTextColor(Color.RED);
 					Toast.makeText(EmcCalculatorActivity.this, getString(R.string.emc_empty), Toast.LENGTH_SHORT).show();
 				} else {
 					float M = Float.parseFloat(emc);
 					int h = Integer.parseInt(rel_hum);
 					
 					if(M < MIN_W || M > MAX_W) {
+						emc_input.setBackgroundResource(R.drawable.calc_input_error);
+						emc_input.setTextColor(Color.RED);
 						Toast.makeText(EmcCalculatorActivity.this, getString(R.string.emc_wrong), Toast.LENGTH_SHORT).show();
 					} else if(h < MIN_H || h > MAX_H) {
+						rh_input.setBackgroundResource(R.drawable.calc_input_error);
+						rh_input.setTextColor(Color.RED);
 						Toast.makeText(EmcCalculatorActivity.this, getString(R.string.rel_hum_wrong), Toast.LENGTH_SHORT).show();
 					} else {
+						emc_input.setBackgroundResource(R.drawable.calc_input_default);
+						emc_input.setTextColor(Color.WHITE);
+						rh_input.setBackgroundResource(R.drawable.calc_input_default);
+						rh_input.setTextColor(Color.WHITE);
+
 						((EditText)findViewById(R.id.amb_temp)).setText(calculateTemp(h, M));
 					}
 				}
 			}
         });
+        
+        findViewById(R.id.rel_hum).setOnFocusChangeListener(this);
+        
+        findViewById(R.id.amb_temp).setOnFocusChangeListener(this);
+        
+        findViewById(R.id.emc).setOnFocusChangeListener(this);
+	}
+	
+	public void onFocusChange(View v, boolean hasFocus) {
+		((EditText)v).setTextColor(Color.WHITE);
+		
+		if(hasFocus) {
+			v.setBackgroundResource(R.drawable.calc_input_focused);
+		} else {
+			v.setBackgroundResource(R.drawable.calc_input_default);
+		}
 	}
 	
 	private void fillEMCTable() {
@@ -111,7 +159,7 @@ public class EmcCalculatorActivity extends Activity {
 						in.close();
 					} catch (IOException e1) {
 						ContentProviderClient split_provider = getContentResolver().acquireContentProviderClient(SplitProvider.EMC2TEMP_URI);
-						ContentValues[] db_string = new ContentValues[(MAX_H + 1) * (MAX_T / T_STEP + 1)];
+						ContentValues[] db_string = new ContentValues[(MAX_H / H_STEP + 1) * (MAX_T / T_STEP + 1)];
 						int i = 0;
 						
 						for(int h = MIN_H; h <= MAX_H; h+=H_STEP) {
@@ -146,7 +194,7 @@ public class EmcCalculatorActivity extends Activity {
 		double K2 = 1.09 + 0.0284 * T - 0.0000904 * T * T;
 		double M = 1800 / W * (KH / (1 - KH) + ((K1 * KH + 2 * K1 * K2 * K * K * H * H) / (1 + K1 * KH + K1 * K2 * K * K * H * H)));
 		
-		DecimalFormat df = new DecimalFormat();
+		DecimalFormat df = (DecimalFormat)DecimalFormat.getInstance(Locale.US);
 		df.setMaximumFractionDigits(2);
 
 		return df.format(M);

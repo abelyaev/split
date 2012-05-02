@@ -12,6 +12,7 @@ import android.widget.CursorAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+
 import com.wagnermeters.split.R;
 import com.wagnermeters.split.cproviders.SplitProvider;
 import com.wagnermeters.split.activities.RCHostActivity;
@@ -82,7 +83,7 @@ public class ResourceCenterActivity extends Activity implements Serializable {
 					article.setGravity(Gravity.CENTER);
 					article.setPadding(10, 10, 10, 10);
 					article.setText(articles.getString(1));
-					article.setTextSize(14);
+					article.setTextSize(16);
 
 					article.setTag(articles.getInt(0));
 					article.setOnClickListener(new View.OnClickListener() {
