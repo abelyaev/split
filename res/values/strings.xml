@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Split</string>
+    
+    <string name="version">version</string>
+    <string name="copyright">Copyright</string>
+    
+    <string name="emc_calc_label">EMC Calculator</string>
+    <string name="res_center_label">Resource Center</string>
+    <string name="wagner_meters_label">Wagner Meters</string>
+    <string name="help_label">Help</string>
+    
+    <string name="rel_hum">Relative Humidity</string>
+    <string name="amb_temp">Ambient Temperature</string>
+    <string name="emc">EMC</string>
+    <string name="get_emc">Get EMC</string>
+    <string name="get_temp">Get Temp</string>
+    <string name="rel_hum_empty">Relative Humidity field can\'t be empty</string>
+    <string name="amb_temp_empty">Ambient Temperature field can\'t be empty</string>
+    <string name="emc_empty">EMC field can\'t be empty</string>
+    <string name="rel_hum_wrong">Relative Humidity field has wrong value</string>
+    <string name="amb_temp_wrong">Ambient Temperature field has wrong value</string>
+    <string name="emc_wrong">EMC field has wrong value</string>
+    <string name="bad_h">Relative Humidity value is out of range (1-100)</string>
+    <string name="bad_emc">EMC value is out of range</string>
+    
+    <string name="warning">Warning</string>
+    <string name="empty_RC">Resource Center is empty. Would You like to fetch its content from the web?</string>
+    <string name="inactive_connection">Please check Your connection status</string>
+    <string name="fetching">Fetching...</string>
+    <string name="resource_text">Some text some text some text some text some text some text some text some text some text some text some text some text some text some text some text some text some text some text some text some text some text some text some text some text some text some text some text some text some text some text some text some text some text some text some text some text some text some text some text some text some text some text some text some text some text some text</string>
+    
+    <string name="new_rc">New Resource Center item received</string>
+    <string name="new_wm">New Wagner Meters item received</string>
+    <string name="new_help">New Help item received</string>
+    <string name="new_push">New push notification item received</string>
+    
+    <string name="not_impl">This feature is not implemented yet...</string>
+
+</resources>
