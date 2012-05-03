@@ -39,6 +39,8 @@ public class FetchService extends Service {
 	
 	private final String LAST_RC_PREF = "last_RC_sync";
 	
+	private final int REFRESH_PERIOD = 1;
+	
 	Timer t;
 
 	public IBinder onBind(Intent arg0) {
@@ -192,7 +194,7 @@ public class FetchService extends Service {
 				h.sendMessage(msg);
 			}
 			
-		}, 0, 1800000);
+		}, 0, REFRESH_PERIOD * 60 * 1000);
     }
 	
 	public void onDestroy() {
@@ -227,8 +229,9 @@ public class FetchService extends Service {
 				intent.setData(Uri.parse(notification_data[3]));
 		}
 		
-        Notification notification = new Notification(R.drawable.icon, title, System.currentTimeMillis());
+        Notification notification = new Notification(R.drawable.icon_notify, title, System.currentTimeMillis());
         int id = (int)(Math.random() * 1000);
+        intent.putExtra("n_id", id);
         PendingIntent contentIntent = PendingIntent.getActivity(this, id, intent, 0);
         notification.setLatestEventInfo(this, title, notification_data[2], contentIntent);
         nm.notify(id, notification);

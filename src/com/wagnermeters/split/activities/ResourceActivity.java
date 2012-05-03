@@ -6,7 +6,6 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
-import android.webkit.WebView;
 import android.widget.TextView;
 
 import com.wagnermeters.split.R;
@@ -43,8 +42,9 @@ public class ResourceActivity extends Activity {
         c.moveToFirst();
         
         ((TextView)findViewById(R.id.title)).setText(c.getString(0));
-        ((WebView)findViewById(R.id.teaser)).setBackgroundColor(0);
-        ((WebView)findViewById(R.id.teaser)).loadData("<div style=\"color:white!important;\">" + c.getString(1) + "</div>", "text/html", null);
+        ((TextView)findViewById(R.id.teaser)).setText(c.getString(1));
+        //((WebView)findViewById(R.id.teaser)).setBackgroundColor(0);
+        //((WebView)findViewById(R.id.teaser)).loadData("<div style=\"color:white!important;\">" + c.getString(1) + "</div>", "text/html", null);
         
         findViewById(R.id.back).setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {

@@ -1,5 +1,6 @@
 package com.wagnermeters.split.activities;
 
+import android.app.NotificationManager;
 import android.app.TabActivity;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -19,6 +20,8 @@ public class TabsActivity extends TabActivity {
 	protected int pending_tab = 0;
 	
 	protected int r_id = 0;
+	
+	private int n_id = 0;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,6 +54,14 @@ public class TabsActivity extends TabActivity {
     
     public void onResume() {
     	super.onResume();
+    	
+    	if(n_id == 0) {
+    		n_id = getIntent().getIntExtra("n_id", 0);
+    	}
+    	if(n_id != 0) {
+			NotificationManager nm = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
+			nm.cancel(n_id);
+		}
 
     	if(r_id == 0) {
     		r_id = getIntent().getIntExtra("r_id", 0);
@@ -70,6 +81,7 @@ public class TabsActivity extends TabActivity {
 
     	pending_tab = intent.getIntExtra("section", 0);
     	r_id = intent.getIntExtra("r_id", 0);
+    	n_id = intent.getIntExtra("n_id", 0);
     }
     
     private TabHost.TabSpec createTab(TabHost tabs, String tag, int title, int icon, Class<?> intentClass, Bundle extra) {
