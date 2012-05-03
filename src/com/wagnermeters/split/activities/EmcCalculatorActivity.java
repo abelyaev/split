@@ -195,7 +195,7 @@ public class EmcCalculatorActivity extends Activity implements View.OnFocusChang
 		double M = 1800 / W * (KH / (1 - KH) + ((K1 * KH + 2 * K1 * K2 * K * K * H * H) / (1 + K1 * KH + K1 * K2 * K * K * H * H)));
 		
 		DecimalFormat df = (DecimalFormat)DecimalFormat.getInstance(Locale.US);
-		df.setMaximumFractionDigits(2);
+		df.setMaximumFractionDigits(3);
 
 		return df.format(M);
 	}
