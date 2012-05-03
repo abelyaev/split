@@ -39,7 +39,7 @@ public class FetchService extends Service {
 	
 	private final String LAST_RC_PREF = "last_RC_sync";
 	
-	private final int REFRESH_PERIOD = 1;
+	private final int REFRESH_PERIOD = 15;
 	
 	Timer t;
 
