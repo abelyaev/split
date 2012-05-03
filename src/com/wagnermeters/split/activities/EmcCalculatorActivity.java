@@ -16,6 +16,8 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.RemoteException;
 import android.preference.PreferenceManager;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -79,18 +81,38 @@ public class EmcCalculatorActivity extends Activity implements View.OnFocusChang
 						rh_input.setBackgroundResource(R.drawable.calc_input_default);
 						rh_input.setTextColor(Color.WHITE);
 
-						((EditText)findViewById(R.id.emc)).setText(calculateEMC(h, T));
+						((EditText)findViewById(R.id.emc)).setText(calculateEMC(h, T, 1));
+						findViewById(R.id.emc).setTag(calculateEMC(h, T, 3));
 					}
 				}
 			}
 		});
+        
+        ((EditText)findViewById(R.id.emc)).addTextChangedListener(new TextWatcher(){
+
+            public void afterTextChanged(Editable s) {}
+
+            public void beforeTextChanged(CharSequence s, int start, int count, int after){
+            	findViewById(R.id.emc).setTag(null);
+            }
+
+            public void onTextChanged(CharSequence s, int start, int before, int count){}
+
+        });
         
         findViewById(R.id.get_temp).setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				EditText rh_input = (EditText)findViewById(R.id.rel_hum);
 				EditText emc_input = (EditText)findViewById(R.id.emc);
 				String rel_hum = rh_input.getText().toString();
-				String emc = emc_input.getText().toString();
+
+				String emc;
+				if(emc_input.getTag() != null) {
+					emc = emc_input.getTag().toString();
+				} else {
+					emc = emc_input.getText().toString();
+				}
+
 				if(rel_hum.length() == 0) {
 					rh_input.setBackgroundResource(R.drawable.calc_input_error);
 					rh_input.setTextColor(Color.RED);
@@ -167,7 +189,7 @@ public class EmcCalculatorActivity extends Activity implements View.OnFocusChang
 								db_string[i] = new ContentValues();
 								db_string[i].put("h", h);
 								db_string[i].put("T", T);
-								db_string[i].put("M", calculateEMC(h, T));
+								db_string[i].put("M", calculateEMC(h, T, 3));
 								i++;
 							}
 						}
@@ -185,7 +207,7 @@ public class EmcCalculatorActivity extends Activity implements View.OnFocusChang
 		}
 	}
 	
-	private String calculateEMC(float h, float T) {
+	private String calculateEMC(float h, float T, int round) {
 		float H = h / 100;
 		double W = 330 + 0.452 * T + 0.00415 * T * T;
 		double K = 0.791 + 0.000463 * T - 0.000000844 * T * T;
@@ -195,7 +217,7 @@ public class EmcCalculatorActivity extends Activity implements View.OnFocusChang
 		double M = 1800 / W * (KH / (1 - KH) + ((K1 * KH + 2 * K1 * K2 * K * K * H * H) / (1 + K1 * KH + K1 * K2 * K * K * H * H)));
 		
 		DecimalFormat df = (DecimalFormat)DecimalFormat.getInstance(Locale.US);
-		df.setMaximumFractionDigits(3);
+		df.setMaximumFractionDigits(round);
 
 		return df.format(M);
 	}
