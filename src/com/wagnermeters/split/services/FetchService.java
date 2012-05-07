@@ -39,7 +39,7 @@ public class FetchService extends Service {
 	
 	private final String LAST_RC_PREF = "last_RC_sync";
 	
-	private final int REFRESH_PERIOD = 15;
+	private final int REFRESH_PERIOD = 3;
 	
 	Timer t;
 
@@ -67,7 +67,7 @@ public class FetchService extends Service {
 		t.schedule(new TimerTask() {
 			
 			private String base_uri = "http://woodapp.moisturemeters.com/sync/";
-			
+
 			private long last_sync;
 
 			public void run() {
