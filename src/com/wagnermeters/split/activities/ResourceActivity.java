@@ -1,8 +1,6 @@
 package com.wagnermeters.split.activities;
 
 import java.io.IOException;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
@@ -10,14 +8,13 @@ import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -25,12 +22,10 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.preference.PreferenceManager;
 import android.view.View;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.wagnermeters.split.R;
 import com.wagnermeters.split.cproviders.SplitProvider;
@@ -38,22 +33,15 @@ import com.wagnermeters.split.activities.RCHostActivity;
 
 public class ResourceActivity extends Activity {
 	
-<<<<<<< HEAD
-	private class HelloWebViewClient extends WebViewClient {
-
-	    public boolean shouldOverrideUrlLoading(WebView view, String url) {
-	        //view.loadUrl(url);
-	    	Toast.makeText(view.getContext(), url, Toast.LENGTH_SHORT).show();
-
-=======
 	private class SplitWebViewClient extends WebViewClient {
 
 	    public boolean shouldOverrideUrlLoading(WebView view, String url) {
 	    	Intent intent = new Intent(Intent.ACTION_VIEW);
 			intent.setData(Uri.parse(url));
-			startActivity(intent);
-	        
->>>>>>> 0c2f58802c979d99a67a6922ad71ef4e5d23e649
+			try {
+				startActivity(intent);
+			} catch (ActivityNotFoundException e) {}
+
 	        return true;
 	    }
 
@@ -89,13 +77,9 @@ public class ResourceActivity extends Activity {
         c.moveToFirst();
         
         ((TextView)findViewById(R.id.title)).setText(c.getString(0));
-<<<<<<< HEAD
-        //((TextView)findViewById(R.id.teaser)).setText(c.getString(1));
-        ((WebView)findViewById(R.id.full)).setBackgroundColor(0);
-        ((WebView)findViewById(R.id.full)).loadData("<div style=\"color:white!important;\">" + c.getString(1) + "</div>", "text/html", null);
-        ((WebView)findViewById(R.id.full)).setWebViewClient(new HelloWebViewClient());
-=======
         ((TextView)findViewById(R.id.teaser)).setText(c.getString(1));
+        findViewById(R.id.teaser).setVisibility(View.VISIBLE);
+        findViewById(R.id.full).setVisibility(View.GONE);
         
         final ProgressDialog d = new ProgressDialog(this.getParent());
         
@@ -108,9 +92,7 @@ public class ResourceActivity extends Activity {
 					String html = msg.getData().getString("html");
 					
 					((WebView)findViewById(R.id.full)).setBackgroundColor(0);
-			        ((WebView)findViewById(R.id.full)).loadData("<div style=\"color:white!important;\">" + html + "</div>", "text/html", null);
-			        ((WebView)findViewById(R.id.full)).setVisibility(View.VISIBLE);
-			        ((TextView)findViewById(R.id.teaser)).setVisibility(View.GONE);
+			        ((WebView)findViewById(R.id.full)).loadData("<style>a{color:#BF7C08!important}</style><div style=\"color:white!important;\">" + html + "</div>", "text/html", null);
 				}
 			}
 			
@@ -158,10 +140,6 @@ public class ResourceActivity extends Activity {
 		
 		t.start();
         
-        //((WebView)findViewById(R.id.full)).setBackgroundColor(0);
-        //((WebView)findViewById(R.id.full)).loadData("<div style=\"color:white!important;\">" + c.getString(1) + "</div>", "text/html", null);
->>>>>>> 0c2f58802c979d99a67a6922ad71ef4e5d23e649
-        
         findViewById(R.id.back).setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				switch(pid) {
@@ -184,6 +162,20 @@ public class ResourceActivity extends Activity {
 				Intent intent = new Intent(Intent.ACTION_VIEW);
 				intent.setData(Uri.parse(v.getTag().toString()));
 				startActivity(intent);
+			}
+		});
+        
+        findViewById(R.id.show_teaser).setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				findViewById(R.id.teaser).setVisibility(View.VISIBLE);
+		        findViewById(R.id.full).setVisibility(View.GONE);
+			}
+		});
+        
+        findViewById(R.id.show_article).setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				findViewById(R.id.full).setVisibility(View.VISIBLE);
+		        findViewById(R.id.teaser).setVisibility(View.GONE);
 			}
 		});
         

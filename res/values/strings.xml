@@ -39,5 +39,7 @@
     
     <string name="read_more">Read more...</string>
     <string name="back">back</string>
+    <string name="show_teaser">Show teaser</string>
+    <string name="show_article">Show article</string>
 
 </resources>

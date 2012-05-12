@@ -24,21 +24,51 @@
        		android:textSize="20sp"
        		android:textStyle="bold"
        		android:background="@drawable/substrate_small" />
-        <TextView
-            android:id="@+id/teaser"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:padding="20dp" />
-        <WebView
-            android:id="@+id/full"
-        	android:layout_width="fill_parent"
-        	android:layout_height="wrap_content"
-        	android:visibility="visible" />
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:padding="20dp">
+            android:padding="5dp">
+            <TextView
+                android:id="@+id/show_teaser"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="left"
+                android:textSize="18sp"
+                android:text="@string/show_teaser" />
+            <TextView
+                android:id="@+id/show_article"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="right"
+                android:textSize="18sp"
+                android:text="@string/show_article" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingTop="20dp"
+            android:paddingBottom="20dp"
+            android:background="@drawable/substrate">
+            <TextView
+                android:id="@+id/teaser"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:padding="20dp" />
+            <WebView
+                android:id="@+id/full"
+            	android:layout_width="fill_parent"
+        	   android:layout_height="wrap_content" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dp">
             <TextView
                 android:id="@+id/back"
                 android:layout_width="fill_parent"
