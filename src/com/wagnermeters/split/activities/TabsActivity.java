@@ -17,6 +17,8 @@ public class TabsActivity extends TabActivity {
 	
 	private TabHost tabs;
 	
+	protected int current_tab = 0;
+	
 	protected int pending_tab = 0;
 	
 	protected int r_id = 0;
@@ -50,6 +52,14 @@ public class TabsActivity extends TabActivity {
         int contentHeight = getWindowManager().getDefaultDisplay().getHeight() - prefs.getInt("status_bar_height", 0);        
         FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.FILL_PARENT, contentHeight);
         findViewById(android.R.id.tabhost).setLayoutParams(lp);
+        
+        tabs.setOnTabChangedListener(new TabHost.OnTabChangeListener() {
+
+			public void onTabChanged(String tabId) {
+				current_tab = Integer.parseInt(tabId);
+			}
+
+		});
     }
     
     public void onResume() {
@@ -66,7 +76,7 @@ public class TabsActivity extends TabActivity {
     	if(r_id == 0) {
     		r_id = getIntent().getIntExtra("r_id", 0);
     	}
-    	tabs.setCurrentTab(pending_tab == 0 ? getIntent().getIntExtra("section", 0) : pending_tab);
+    	tabs.setCurrentTab(pending_tab == 0 ? getIntent().getIntExtra("section", current_tab) : pending_tab);
     }
     
     public void onPause() {
@@ -75,6 +85,8 @@ public class TabsActivity extends TabActivity {
     	pending_tab = 0;
     	r_id = 0;
     }
+    
+    
     
     protected void onNewIntent(Intent intent) {
     	super.onNewIntent(intent);

@@ -34,7 +34,7 @@
             android:id="@+id/full"
         	android:layout_width="fill_parent"
         	android:layout_height="wrap_content"
-        	android:visibility="gone" />
+        	android:visibility="visible" />
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"

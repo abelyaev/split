@@ -98,6 +98,37 @@ public class FetchService extends Service {
 						values.put("backend_id", category.getInt("id"));
 						values.put("title", category.getString("title"));
 						values.put("deleted", category.getInt("deleted"));
+						values.put("type", "categories");
+						
+						c = getContentResolver().query(
+							SplitProvider.CATEGORIES_URI,
+							new String[] {"_id"},
+							"backend_id=?",
+							new String[] {Integer.toString(category.getInt("id"))},
+							null
+						);
+						if(c.getCount() == 0) {
+							getContentResolver().insert(SplitProvider.CATEGORIES_URI, values);
+						} else {
+							getContentResolver().update(
+								SplitProvider.CATEGORIES_URI,
+								values,
+								"backend_id=?",
+								new String[] {Integer.toString(category.getInt("id"))}
+							);
+						}
+						c.close();
+					}
+					
+					categories = response.getJSONArray("jobtypes");
+					length = categories.length();
+					for(int i = 0; i < length; i++) {
+						category = categories.getJSONObject(i);
+						values = new ContentValues();
+						values.put("backend_id", category.getInt("id"));
+						values.put("title", category.getString("title"));
+						values.put("deleted", 0);
+						values.put("type", "jobtypes");
 						
 						c = getContentResolver().query(
 							SplitProvider.CATEGORIES_URI,
@@ -131,6 +162,20 @@ public class FetchService extends Service {
 						values = new ContentValues();
 						values.put("backend_id", article.getInt("nid"));
 						values.put("category_id", article.getInt("category_id"));
+
+						JSONArray types = article.getJSONArray("tags");
+						getContentResolver().delete(
+							SplitProvider.ARTICLES_CATEGORIES_URI,
+							"article_id=?",
+							new String[] {Integer.toString(article.getInt("nid"))}
+						);
+						for(int j = 0; j < types.length(); j++) {
+							ContentValues cp_values = new ContentValues();
+							cp_values.put("category_id", types.getJSONObject(j).getInt("tid"));
+							cp_values.put("article_id", article.getInt("nid"));
+
+							getContentResolver().insert(SplitProvider.ARTICLES_CATEGORIES_URI, cp_values);
+						}
 
 						switch(article.getInt("section_id")) {
 							case 2:

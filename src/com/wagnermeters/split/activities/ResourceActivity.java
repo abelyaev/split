@@ -6,13 +6,27 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.wagnermeters.split.R;
 import com.wagnermeters.split.cproviders.SplitProvider;
 import com.wagnermeters.split.activities.RCHostActivity;
 
 public class ResourceActivity extends Activity {
+	
+	private class HelloWebViewClient extends WebViewClient {
+
+	    public boolean shouldOverrideUrlLoading(WebView view, String url) {
+	        //view.loadUrl(url);
+	    	Toast.makeText(view.getContext(), url, Toast.LENGTH_SHORT).show();
+
+	        return true;
+	    }
+
+	}
 	
 	public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,9 +56,10 @@ public class ResourceActivity extends Activity {
         c.moveToFirst();
         
         ((TextView)findViewById(R.id.title)).setText(c.getString(0));
-        ((TextView)findViewById(R.id.teaser)).setText(c.getString(1));
-        //((WebView)findViewById(R.id.teaser)).setBackgroundColor(0);
-        //((WebView)findViewById(R.id.teaser)).loadData("<div style=\"color:white!important;\">" + c.getString(1) + "</div>", "text/html", null);
+        //((TextView)findViewById(R.id.teaser)).setText(c.getString(1));
+        ((WebView)findViewById(R.id.full)).setBackgroundColor(0);
+        ((WebView)findViewById(R.id.full)).loadData("<div style=\"color:white!important;\">" + c.getString(1) + "</div>", "text/html", null);
+        ((WebView)findViewById(R.id.full)).setWebViewClient(new HelloWebViewClient());
         
         findViewById(R.id.back).setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {

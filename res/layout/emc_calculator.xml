@@ -12,7 +12,7 @@
         android:orientation="vertical">
         <ImageView
     		android:layout_width="fill_parent"
-        	android:layout_height="wrap_content"
+        	android:layout_height="50dp"
         	android:paddingLeft="20dp"
     		android:paddingRight="20dp"
     		android:paddingTop="10dp"
@@ -24,16 +24,16 @@
         	android:orientation="vertical"
         	android:paddingLeft="10dp"
             android:paddingRight="10dp"
-            android:paddingTop="20dp"
-            android:paddingBottom="20dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="5dp"
         	android:background="@drawable/substrate">
 			<LinearLayout
         		android:layout_width="fill_parent"
         		android:layout_height="wrap_content"
         		android:paddingLeft="10dp"
     			android:paddingRight="10dp"
-    			android:paddingTop="20dp"
-    			android:paddingBottom="20dp">
+    			android:paddingTop="5dp"
+    			android:paddingBottom="5dp">
     			<LinearLayout
                     android:layout_width="fill_parent"
                     android:layout_height="40dp"
@@ -63,8 +63,8 @@
         		android:layout_height="wrap_content"
         		android:paddingLeft="10dp"
     			android:paddingRight="10dp"
-    			android:paddingTop="20dp"
-    			android:paddingBottom="20dp">
+    			android:paddingTop="5dp"
+    			android:paddingBottom="5dp">
     			<LinearLayout
                     android:layout_width="fill_parent"
                     android:layout_height="40dp"
@@ -94,8 +94,8 @@
         		android:layout_height="wrap_content"
         		android:paddingLeft="10dp"
     			android:paddingRight="10dp"
-    			android:paddingTop="20dp"
-    			android:paddingBottom="20dp">
+    			android:paddingTop="5dp"
+    			android:paddingBottom="5dp">
     			<LinearLayout
                     android:layout_width="fill_parent"
                     android:layout_height="40dp"
@@ -123,7 +123,7 @@
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:padding="10dp">
+            android:padding="5dp">
             <Button
                 android:id="@+id/get_emc"
                 android:layout_width="fill_parent"
