@@ -27,7 +27,8 @@
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:padding="5dp">
+            android:padding="5dp"
+            android:visibility="gone">
             <TextView
                 android:id="@+id/show_teaser"
                 android:layout_width="fill_parent"
@@ -63,7 +64,7 @@
             <WebView
                 android:id="@+id/full"
             	android:layout_width="fill_parent"
-        	   android:layout_height="wrap_content" />
+        	    android:layout_height="wrap_content" />
         </LinearLayout>
         <LinearLayout
             android:layout_width="fill_parent"

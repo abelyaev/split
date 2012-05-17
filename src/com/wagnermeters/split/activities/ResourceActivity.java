@@ -56,6 +56,7 @@ public class ResourceActivity extends Activity {
         updateInterface(id, pid);
         
         ((WebView)findViewById(R.id.full)).setWebViewClient(new SplitWebViewClient());
+        ((WebView)findViewById(R.id.full)).setBackgroundColor(0);
 	}
 	
 	public void onNewIntent(Intent intent) {
@@ -90,9 +91,12 @@ public class ResourceActivity extends Activity {
 				
 				if(msg.what == 0) {
 					String html = msg.getData().getString("html");
-					
-					((WebView)findViewById(R.id.full)).setBackgroundColor(0);
+
 			        ((WebView)findViewById(R.id.full)).loadData("<style>a{color:#BF7C08!important}</style><div style=\"color:white!important;\">" + html + "</div>", "text/html", null);
+			        ((WebView)findViewById(R.id.full)).reload();
+			        
+			        findViewById(R.id.full).setVisibility(View.VISIBLE);
+			        findViewById(R.id.teaser).setVisibility(View.GONE);
 				}
 			}
 			
@@ -127,8 +131,11 @@ public class ResourceActivity extends Activity {
 					msg.setData(data);
 					h.sendMessage(msg);
 				} catch(JSONException e) {
+					e.printStackTrace();
 				} catch (ClientProtocolException e) {
+					e.printStackTrace();
 				} catch (IOException e) {
+					e.printStackTrace();
 				}
 			}
 			
