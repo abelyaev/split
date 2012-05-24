@@ -72,21 +72,24 @@ public class TabsActivity extends TabActivity {
 			NotificationManager nm = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
 			nm.cancel(n_id);
 		}
-
+    	
     	if(r_id == 0) {
     		r_id = getIntent().getIntExtra("r_id", 0);
     	}
-    	tabs.setCurrentTab(pending_tab == 0 ? getIntent().getIntExtra("section", current_tab) : pending_tab);
+
+    	if(pending_tab == 0) {
+    		pending_tab = getIntent().getIntExtra("section", current_tab);
+    	}
+
+    	tabs.setCurrentTab(pending_tab);
     }
     
-    public void onPause() {
+    public void onStop() {
     	super.onPause();
     	
     	pending_tab = 0;
     	r_id = 0;
     }
-    
-    
     
     protected void onNewIntent(Intent intent) {
     	super.onNewIntent(intent);

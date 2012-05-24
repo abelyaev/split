@@ -1,6 +1,7 @@
 package com.wagnermeters.split.activities;
 
 import java.io.IOException;
+import java.util.Random;
 
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
@@ -92,7 +93,7 @@ public class ResourceActivity extends Activity {
 				if(msg.what == 0) {
 					String html = msg.getData().getString("html");
 
-			        ((WebView)findViewById(R.id.full)).loadData("<style>a{color:#BF7C08!important}</style><div style=\"color:white!important;\">" + html + "</div>", "text/html", null);
+			        ((WebView)findViewById(R.id.full)).loadData("<style>a{color:#BF7C08!important} h2{display:none} div.field-name-field-problem, div.field-name-field-tags{display:none}</style><div style=\"color:white!important;\">" + html + "</div>", "text/html", null);
 			        ((WebView)findViewById(R.id.full)).reload();
 			        
 			        findViewById(R.id.full).setVisibility(View.VISIBLE);
@@ -118,7 +119,9 @@ public class ResourceActivity extends Activity {
 			    }
 
 				HttpClient client = new DefaultHttpClient();
-				HttpGet request = new HttpGet(base_uri + Integer.toString(id));
+				Random randomGenerator = new Random();
+				HttpGet request = new HttpGet(base_uri + Integer.toString(id) + "/" + Integer.toString(randomGenerator.nextInt(10000)));
+				//request.setHeader("Cache-Control", "no-cache, no-store");
 				ResponseHandler<String> responseHandler = new BasicResponseHandler();
 				try {
 					JSONObject response = new JSONObject(client.execute(request, responseHandler));

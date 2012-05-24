@@ -155,7 +155,7 @@ public class FetchService extends Service {
 					length = articles.length();
 					if(last_sync != 0 && length > 0) {
 						notifications = new Bundle();
-						notifications.putInt("length", length);
+						notifications.putInt("length", 0);
 					}
 					for(int i = 0; i < length; i++) {
 						article = articles.getJSONObject(i);
@@ -205,6 +205,17 @@ public class FetchService extends Service {
 						);
 						if(c.getCount() == 0) {
 							getContentResolver().insert(SplitProvider.ARTICLES_URI, values);
+							
+							if(last_sync != 0) {
+								String[] notification = new String[] {
+									Integer.toString(article.getInt("section_id")),
+									Integer.toString(article.getInt("nid")),
+									values.getAsString("title"),
+									values.getAsString("link")
+								};
+								notifications.putStringArray(Integer.toString(i), notification);
+								notifications.putInt("length", notifications.getInt("length") + 1);
+							}
 						} else {
 							getContentResolver().update(
 								SplitProvider.ARTICLES_URI,
@@ -214,16 +225,6 @@ public class FetchService extends Service {
 							);
 						}
 						c.close();
-						
-						if(last_sync != 0) {
-							String[] notification = new String[] {
-								Integer.toString(article.getInt("section_id")),
-								Integer.toString(article.getInt("nid")),
-								values.getAsString("title"),
-								values.getAsString("link")
-							};
-							notifications.putStringArray(Integer.toString(i), notification);
-						}
 					}
 				} catch (ClientProtocolException e) {
 				} catch (IOException e) {
@@ -251,7 +252,7 @@ public class FetchService extends Service {
 		int r_id = Integer.parseInt(notification_data[1]);
 		CharSequence title;
 		Intent intent = new Intent(this, TabsActivity.class);
-		//intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
 		switch(section) {
 			case 2:
 				intent.putExtra("section", 1);
