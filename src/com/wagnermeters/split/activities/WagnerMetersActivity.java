@@ -1,14 +1,21 @@
 package com.wagnermeters.split.activities;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,11 +44,38 @@ public class WagnerMetersActivity extends Activity implements Serializable {
 		public void bindView(View view, Context context, Cursor cursor) {
 			LinearLayout list_item = (LinearLayout)view;
 			
-			list_item.setTag(cursor.getInt(1));
+			list_item.setId(cursor.getInt(1));
+			list_item.setTag(cursor.getString(3));
 			list_item.setOnClickListener(new View.OnClickListener() {
 
 				public void onClick(View v) {
-					((WMHostActivity)getParent()).shareTab("Resource", ResourceActivity.class, (Integer)v.getTag());
+					if(v.getId() != 0) {
+						((WMHostActivity)getParent()).shareTab("Resource", ResourceActivity.class, v.getId());
+					} else {
+						File sd_card = Environment.getExternalStorageDirectory();
+						File lookup = new File(sd_card, "lookup.jpg");
+						try {
+							FileOutputStream fos = new FileOutputStream(lookup);
+							InputStream is = getResources().openRawResource(Integer.parseInt(v.getTag().toString()));
+							
+							byte[] buf = new byte[1024];
+		        			int len;
+		        			while((len = is.read(buf)) > 0) {
+		        				fos.write(buf, 0, len);
+		        			}
+		        			
+		        			is.close();
+		        			fos.close();
+
+		        			Intent i = new Intent(Intent.ACTION_VIEW);
+		        			i.setDataAndType(Uri.fromFile(lookup), "image/*");
+		        			startActivity(i);
+						} catch (FileNotFoundException e) {
+							e.printStackTrace();
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+					}
 				}
 
 			});
@@ -64,7 +98,7 @@ public class WagnerMetersActivity extends Activity implements Serializable {
         
         Cursor wm = managedQuery(
             SplitProvider.ARTICLES_URI,
-            new String[] {"_id", "backend_id", "title"},
+            new String[] {"_id", "backend_id", "title", "link"},
             "deleted = ? AND section = 'wm'",
             new String[] {"0"},
             "title"

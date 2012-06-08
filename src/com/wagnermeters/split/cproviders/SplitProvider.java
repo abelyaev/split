@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import com.wagnermeters.split.R;
+
 import android.content.ContentProvider;
 import android.content.ContentValues;
 import android.content.Context;
@@ -32,6 +34,8 @@ public class SplitProvider extends ContentProvider {
 		public static final String ARTICLES_TABLE = "ARTICLES";
 		
 		public static final String ARTICLES_CATEGORIES_TABLE = "ARTICLES_CATEGORIES";
+		
+		public static final int LOOKUP_ARTICLE_ID = 29686;
 		
 		public static final String EMC2TEMP_TABLE_CREATE = "CREATE TABLE " + EMC2TEMP_TABLE + " (_id INTEGER PRIMARY KEY AUTOINCREMENT, h INTEGER, T INTEGER, M INTEGER)";
 		
@@ -65,6 +69,8 @@ public class SplitProvider extends ContentProvider {
 	public static final Uri ARTICLES_CATEGORIES_URI = Uri.parse("content://com.wagnermeters.split.splitprovider/articles_categories");
 	
 	public static final Uri RC_ARTICLES_URI = Uri.parse("content://com.wagnermeters.split.splitprovider/rc_articles");
+	
+	public static final Uri RC_ARTICLE_URI = Uri.parse("content://com.wagnermeters.split.splitprovider/rc_article");
 
 	private static final int EMC2TEMP = 1;
 	
@@ -75,6 +81,8 @@ public class SplitProvider extends ContentProvider {
 	private static final int ARTICLES_CATEGORIES = 4;
 	
 	private static final int RC_ARTICLES = 5;
+	
+	private static final int RC_ARTICLE = 6;
 
 	private static final UriMatcher sURIMatcher = new UriMatcher(UriMatcher.NO_MATCH);
 	
@@ -84,6 +92,7 @@ public class SplitProvider extends ContentProvider {
 		sURIMatcher.addURI("com.wagnermeters.split.splitprovider", "articles", ARTICLES);
 		sURIMatcher.addURI("com.wagnermeters.split.splitprovider", "articles_categories", ARTICLES_CATEGORIES);
 		sURIMatcher.addURI("com.wagnermeters.split.splitprovider", "rc_articles", RC_ARTICLES);
+		sURIMatcher.addURI("com.wagnermeters.split.splitprovider", "rc_article", RC_ARTICLE);
 	}
 	
 	public boolean onCreate() {
@@ -170,6 +179,15 @@ public class SplitProvider extends ContentProvider {
     			);
 
     			break;
+    		case RC_ARTICLE:
+    			result = db.rawQuery(
+    				"SELECT c.title, a.teaser, a.link " +
+    				"FROM " + SplitDbHelper.ARTICLES_TABLE + " a INNER JOIN " +
+    				SplitDbHelper.CATEGORIES_TABLE + " c ON c.backend_id = a.category_id WHERE " + selection,
+    				null
+    			);
+
+    			break;
 		}
 		
 		return result;
@@ -214,6 +232,8 @@ public class SplitProvider extends ContentProvider {
 		catch (IOException e) {}
 
 		db = new SplitDbHelper(context).getWritableDatabase();
+		
+		db.execSQL("INSERT INTO " + SplitDbHelper.ARTICLES_TABLE + " (_id, backend_id, category_id, section, title, teaser, link, deleted) VALUES (" + SplitDbHelper.LOOKUP_ARTICLE_ID + ", 0, 0, 'wm', 'SG Look up Table', '', " + R.drawable.lookup + ", 0)");
 	}
 	
 }

@@ -45,6 +45,10 @@ public class ResourceActivity extends Activity {
 
 	        return true;
 	    }
+	    
+	    public void onPageFinished(WebView view, String url) {
+	    	view.setVisibility(View.VISIBLE);
+	    }
 
 	}
 	
@@ -58,6 +62,7 @@ public class ResourceActivity extends Activity {
         
         ((WebView)findViewById(R.id.full)).setWebViewClient(new SplitWebViewClient());
         ((WebView)findViewById(R.id.full)).setBackgroundColor(0);
+        ((WebView)findViewById(R.id.full)).invokeZoomPicker();
 	}
 	
 	public void onNewIntent(Intent intent) {
@@ -70,12 +75,22 @@ public class ResourceActivity extends Activity {
 	
 	private void updateInterface(final int id, final int pid) {
         Cursor c = getContentResolver().query(
-			SplitProvider.ARTICLES_URI,
-			new String[] {"title", "teaser", "link"},
-			"backend_id=?",
-			new String[] {Integer.toString(id)},
+			SplitProvider.RC_ARTICLE_URI,
+			null,
+			"a.backend_id = " + Integer.toString(id),
+			null,
 			null
 		);
+        if(c.getCount() == 0) {
+        	c.close();
+        	c = getContentResolver().query(
+        		SplitProvider.ARTICLES_URI,
+        		new String[] {"title", "teaser", "link"},
+        		"backend_id = ?",
+        		new String[] {Integer.toString(id)},
+        		null
+        	);
+        }
         c.moveToFirst();
         
         ((TextView)findViewById(R.id.title)).setText(c.getString(0));
@@ -95,9 +110,11 @@ public class ResourceActivity extends Activity {
 
 			        ((WebView)findViewById(R.id.full)).loadData("<style>a{color:#BF7C08!important} h2{display:none} div.field-name-field-problem, div.field-name-field-tags{display:none}</style><div style=\"color:white!important;\">" + html + "</div>", "text/html", null);
 			        ((WebView)findViewById(R.id.full)).reload();
-			        
-			        findViewById(R.id.full).setVisibility(View.VISIBLE);
-			        findViewById(R.id.teaser).setVisibility(View.GONE);
+
+			        findViewById(R.id.teaser).setVisibility(View.GONE);			        
+			        findViewById(R.id.read_more).setVisibility(View.GONE);
+				} else {
+					findViewById(R.id.read_more).setVisibility(View.VISIBLE);
 				}
 			}
 			
@@ -134,10 +151,13 @@ public class ResourceActivity extends Activity {
 					msg.setData(data);
 					h.sendMessage(msg);
 				} catch(JSONException e) {
+					h.sendMessage(h.obtainMessage(1));
 					e.printStackTrace();
 				} catch (ClientProtocolException e) {
+					h.sendMessage(h.obtainMessage(1));
 					e.printStackTrace();
 				} catch (IOException e) {
+					h.sendMessage(h.obtainMessage(1));
 					e.printStackTrace();
 				}
 			}
@@ -172,20 +192,6 @@ public class ResourceActivity extends Activity {
 				Intent intent = new Intent(Intent.ACTION_VIEW);
 				intent.setData(Uri.parse(v.getTag().toString()));
 				startActivity(intent);
-			}
-		});
-        
-        findViewById(R.id.show_teaser).setOnClickListener(new View.OnClickListener() {
-			public void onClick(View v) {
-				findViewById(R.id.teaser).setVisibility(View.VISIBLE);
-		        findViewById(R.id.full).setVisibility(View.GONE);
-			}
-		});
-        
-        findViewById(R.id.show_article).setOnClickListener(new View.OnClickListener() {
-			public void onClick(View v) {
-				findViewById(R.id.full).setVisibility(View.VISIBLE);
-		        findViewById(R.id.teaser).setVisibility(View.GONE);
 			}
 		});
         

@@ -56,7 +56,10 @@ public class FetchService extends Service {
 				Bundle notifications = msg.getData();
 				if(notifications != null) {
 					for(int i = 0; i < notifications.getInt("length"); i++) {
-						showNotification(notifications.getStringArray((Integer.toString(i))));
+						String[] notification = notifications.getStringArray((Integer.toString(i)));
+						if(notification[0] != null) {
+							showNotification(notification);
+						}
 					}
 				}
 			}
