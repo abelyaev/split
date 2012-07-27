@@ -15,6 +15,7 @@ import org.json.JSONObject;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.ConnectivityManager;
@@ -27,12 +28,15 @@ import android.view.View;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.wagnermeters.split.R;
 import com.wagnermeters.split.cproviders.SplitProvider;
 import com.wagnermeters.split.activities.RCHostActivity;
 
 public class ResourceActivity extends Activity {
+	
+	private int pid;
 	
 	private class SplitWebViewClient extends WebViewClient {
 
@@ -47,7 +51,9 @@ public class ResourceActivity extends Activity {
 	    }
 	    
 	    public void onPageFinished(WebView view, String url) {
-	    	view.setVisibility(View.VISIBLE);
+	    	if(view.getTag().equals("ready")) {
+	    		view.setVisibility(View.VISIBLE);
+	    	}
 	    }
 
 	}
@@ -57,23 +63,22 @@ public class ResourceActivity extends Activity {
         setContentView(R.layout.resource);
         
         int id = getIntent().getIntExtra("id", 0);
-        int pid = getIntent().getIntExtra("pid", 0);
-        updateInterface(id, pid);
+        pid = getIntent().getIntExtra("pid", 0);
+        updateInterface(id);
         
         ((WebView)findViewById(R.id.full)).setWebViewClient(new SplitWebViewClient());
         ((WebView)findViewById(R.id.full)).setBackgroundColor(0);
-        ((WebView)findViewById(R.id.full)).invokeZoomPicker();
 	}
 	
 	public void onNewIntent(Intent intent) {
 		super.onNewIntent(intent);
 		
 		int id = intent.getIntExtra("id", 0);
-		int pid = intent.getIntExtra("pid", 0);
-		updateInterface(id, pid);
+		pid = intent.getIntExtra("pid", 0);
+		updateInterface(id);
 	}
 	
-	private void updateInterface(final int id, final int pid) {
+	private void updateInterface(final int id) {
         Cursor c = getContentResolver().query(
 			SplitProvider.RC_ARTICLE_URI,
 			null,
@@ -94,9 +99,16 @@ public class ResourceActivity extends Activity {
         c.moveToFirst();
         
         ((TextView)findViewById(R.id.title)).setText(c.getString(0));
-        ((TextView)findViewById(R.id.teaser)).setText(c.getString(1));
-        findViewById(R.id.teaser).setVisibility(View.VISIBLE);
-        findViewById(R.id.full).setVisibility(View.GONE);
+
+        //((TextView)findViewById(R.id.teaser)).setText(c.getString(1));
+        //findViewById(R.id.teaser).setVisibility(View.GONE);
+
+        WebView full = (WebView)findViewById(R.id.full);
+        full.setVisibility(View.GONE);
+        full.setTag("not-ready");
+        full.loadData("<style>a{color:#BF7C08!important} h2{display:none} div.field-name-field-problem, div.field-name-field-tags{display:none}</style><div style=\"color:white!important;\">" + c.getString(1) + "</div>", "text/html", null);
+        
+        //findViewById(R.id.read_more).setVisibility(View.GONE);
         
         final ProgressDialog d = new ProgressDialog(this.getParent());
         
@@ -104,18 +116,27 @@ public class ResourceActivity extends Activity {
 			
 			public void handleMessage(Message msg) {
 				d.dismiss();
+				WebView full = (WebView)findViewById(R.id.full);
 				
 				if(msg.what == 0) {
 					String html = msg.getData().getString("html");
 
-			        ((WebView)findViewById(R.id.full)).loadData("<style>a{color:#BF7C08!important} h2{display:none} div.field-name-field-problem, div.field-name-field-tags{display:none}</style><div style=\"color:white!important;\">" + html + "</div>", "text/html", null);
-			        ((WebView)findViewById(R.id.full)).reload();
+					ContentValues values = new ContentValues();
+					values.put("teaser", html);
+					getContentResolver().update(
+						SplitProvider.ARTICLES_URI,
+						values,
+						"backend_id=?",
+						new String[] {Integer.toString(id)}
+					);
 
-			        findViewById(R.id.teaser).setVisibility(View.GONE);			        
-			        findViewById(R.id.read_more).setVisibility(View.GONE);
+					full.loadData("<style>a{color:#BF7C08!important} h2{display:none} div.field-name-field-problem, div.field-name-field-tags{display:none}</style><div style=\"color:white!important;\">" + html + "</div>", "text/html", null);
 				} else {
-					findViewById(R.id.read_more).setVisibility(View.VISIBLE);
+					Toast.makeText(getParent(), getString(R.string.online), Toast.LENGTH_LONG).show();
 				}
+				
+				full.setTag("ready");
+				full.reload();
 			}
 			
 		};
@@ -196,6 +217,20 @@ public class ResourceActivity extends Activity {
 		});
         
         c.close();
+	}
+	
+	public void onBackPressed() {
+		switch(pid) {
+			case 0:
+				((RCHostActivity)getParent()).shareTab("ResourceCenter", ResourceCenterActivity.class, 0);
+				break;
+			case 1:
+				((WMHostActivity)getParent()).shareTab("WagnerMeters", WagnerMetersActivity.class, 0);
+				break;
+			case 2:
+				((HelpHostActivity)getParent()).shareTab("Help", HelpActivity.class, 0);
+				break;
+		}
 	}
 
 }

@@ -141,6 +141,16 @@
                 android:textColor="@android:color/white"
                 android:background="@drawable/calc_button" />
         </LinearLayout>
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:padding="15dp">
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/emc_calc_help" />
+        </LinearLayout>
         </LinearLayout>
     </LinearLayout>
 </ScrollView>

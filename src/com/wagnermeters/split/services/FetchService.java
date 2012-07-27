@@ -57,7 +57,7 @@ public class FetchService extends Service {
 				if(notifications != null) {
 					for(int i = 0; i < notifications.getInt("length"); i++) {
 						String[] notification = notifications.getStringArray((Integer.toString(i)));
-						if(notification[0] != null) {
+						if(notification != null && notification[0] != null) {
 							showNotification(notification);
 						}
 					}

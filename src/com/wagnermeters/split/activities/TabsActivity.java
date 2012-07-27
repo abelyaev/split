@@ -6,9 +6,10 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.view.Gravity;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.TabHost;
+import android.widget.TextView;
 
 import com.wagnermeters.split.R;
 import com.wagnermeters.split.services.FetchService;
@@ -103,7 +104,10 @@ public class TabsActivity extends TabActivity {
     	TabHost.TabSpec spec;
     	
     	spec = tabs.newTabSpec(tag);
-    	ImageView indicator = new ImageView(this);
+    	TextView indicator = new TextView(this);
+    	indicator.setText(title);
+    	indicator.setTextColor(getResources().getColor(android.R.color.white));
+    	indicator.setGravity(Gravity.BOTTOM | Gravity.CENTER);
     	indicator.setBackgroundResource(icon);
     	//indicator.setScaleType(ImageView.ScaleType.FIT_END);
     	indicator.setPadding(1, 0, 1, 0);

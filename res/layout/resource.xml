@@ -33,7 +33,8 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:padding="20dp" />
+                android:padding="20dp"
+                android:visibility="gone" />
             <WebView
                 android:id="@+id/full"
             	android:layout_width="fill_parent"
@@ -58,6 +59,7 @@
         	    android:layout_weight="1"
         	    android:gravity="right"
         	    android:textSize="18sp"
-        	    android:text="@string/read_more" />
+        	    android:text="@string/read_more"
+        	    android:visibility="gone" />
         </LinearLayout>
     </LinearLayout>

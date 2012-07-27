@@ -47,5 +47,13 @@ public class WMHostActivity extends ActivityGroup {
 		View view = getLocalActivityManager().startActivity(tag, i).getDecorView();
 		setContentView(view);
 	}
+	
+	public void onBackPressed() {
+		if(getLocalActivityManager().getCurrentActivity().getClass().equals(ResourceActivity.class)) {
+			shareTab("WagnerMeters", WagnerMetersActivity.class, 0);
+		} else {
+			super.onBackPressed();
+		}
+	}
 
 }

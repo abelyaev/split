@@ -101,7 +101,7 @@ public class WagnerMetersActivity extends Activity implements Serializable {
             new String[] {"_id", "backend_id", "title", "link"},
             "deleted = ? AND section = 'wm'",
             new String[] {"0"},
-            "title"
+            "backend_id"
         );
         WMAdapter wm_adapter = new WMAdapter(getParent(), wm);
         ListView wm_list = (ListView)findViewById(R.id.wm);

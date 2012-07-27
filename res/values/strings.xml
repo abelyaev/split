@@ -6,9 +6,9 @@
     <string name="version">version</string>
     <string name="copyright">Copyright</string>
     
-    <string name="emc_calc_label">EMC Calculator</string>
+    <string name="emc_calc_label">EMC Calc</string>
     <string name="res_center_label">Resource Center</string>
-    <string name="wagner_meters_label">Wagner Meters</string>
+    <string name="wagner_meters_label">Technical Resources</string>
     <string name="help_label">Help</string>
     
     <string name="rel_hum">Relative Humidity</string>
@@ -22,24 +22,27 @@
     <string name="rel_hum_wrong">Relative Humidity field has wrong value</string>
     <string name="amb_temp_wrong">Ambient Temperature field has wrong value</string>
     <string name="emc_wrong">EMC field has wrong value</string>
-    <string name="bad_h">Relative Humidity value is out of range (1-100)</string>
+    <string name="bad_h">Relative Humidity value is out of range (1&#8211;100)</string>
     <string name="bad_emc">EMC value is out of range</string>
+    <string name="emc_calc_help">Please insert proper values in the appropriate fields and tap either of the buttons in order to find the EMC or Temperature</string>
     
     <string name="warning">Warning</string>
     <string name="empty_RC">Resource Center is empty. Would You like to fetch its content from the web?</string>
     <string name="inactive_connection">Please check Your connection status</string>
-    <string name="fetching">Fetching...</string>
+    <string name="fetching">Fetching&#8230;</string>
     
     <string name="new_rc">New Resource Center item received</string>
     <string name="new_wm">New Wagner Meters item received</string>
     <string name="new_help">New Help item received</string>
     <string name="new_push">New push notification item received</string>
     
-    <string name="not_impl">This feature is not implemented yet...</string>
+    <string name="not_impl">This feature is not implemented yet&#8230;</string>
     
-    <string name="read_more">Read more...</string>
+    <string name="read_more">Read more&#8230;</string>
     <string name="back">back</string>
     <string name="show_teaser">Show teaser</string>
     <string name="show_article">Show article</string>
+    
+    <string name="online">You should be online to be able to fetch entire article</string>
 
 </resources>
