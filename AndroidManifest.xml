@@ -37,6 +37,8 @@
 
         <activity android:name=".activities.HelpActivity" />
         
+        <activity android:name=".feedback.FeedbackActivity" />
+        
         <service android:name=".services.FetchService" />
 
     </application>

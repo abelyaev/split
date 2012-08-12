@@ -18,6 +18,7 @@ import android.os.RemoteException;
 import android.preference.PreferenceManager;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -145,11 +146,83 @@ public class EmcCalculatorActivity extends Activity implements View.OnFocusChang
 			}
         });
         
-        findViewById(R.id.rel_hum).setOnFocusChangeListener(this);
+        final EditText rel_hum = (EditText)findViewById(R.id.rel_hum);
+        final EditText amb_temp = (EditText)findViewById(R.id.amb_temp);
+        final EditText emc = (EditText)findViewById(R.id.emc);
+        rel_hum.setOnFocusChangeListener(this);
+        rel_hum.setOnKeyListener(new View.OnKeyListener() {
+			
+			public boolean onKey(View v, int keyCode, KeyEvent event) {
+				if(keyCode == KeyEvent.KEYCODE_ENTER) {
+					if(event.getAction() == KeyEvent.ACTION_UP) {
+						if(amb_temp.getText().length() == 0) {
+							//v.clearFocus();
+							amb_temp.requestFocus();
+						} else if(rel_hum.getText().length() > 0) {
+							findViewById(R.id.get_emc).performClick();
+						} else {
+							//v.clearFocus();
+							emc.requestFocus();
+						}
+					}
+					
+					return true;
+				}
+				
+				return false;
+			}
+
+		});
         
-        findViewById(R.id.amb_temp).setOnFocusChangeListener(this);
+        amb_temp.setOnFocusChangeListener(this);
+        amb_temp.setOnKeyListener(new View.OnKeyListener() {
+			
+			public boolean onKey(View v, int keyCode, KeyEvent event) {
+				if(keyCode == KeyEvent.KEYCODE_ENTER) {
+					if(event.getAction() == KeyEvent.ACTION_UP) {
+						if(rel_hum.getText().length() == 0) {
+							//v.clearFocus();
+							emc.requestFocus();
+						} else if(amb_temp.getText().length() > 0) {
+							findViewById(R.id.get_emc).performClick();
+						} else {
+							//v.clearFocus();
+							emc.requestFocus();
+						}
+					}
+					
+					return true;
+				}
+				
+				return false;
+			}
+
+		});
         
-        findViewById(R.id.emc).setOnFocusChangeListener(this);
+        emc.setOnFocusChangeListener(this);
+        emc.setOnKeyListener(new View.OnKeyListener() {
+			
+			public boolean onKey(View v, int keyCode, KeyEvent event) {
+				if(keyCode == KeyEvent.KEYCODE_ENTER) {
+					if(event.getAction() == KeyEvent.ACTION_UP) {
+						if(rel_hum.getText().length() == 0) {
+							//v.clearFocus();
+							rel_hum.requestFocus();
+						} else if(emc.getText().length() > 0) {
+							findViewById(R.id.get_temp).performClick();
+						} else {
+							//v.clearFocus();
+							rel_hum.requestFocus();
+						}
+					}
+					
+					return true;
+				}
+				
+				return false;
+			}
+
+		});
 	}
 	
 	public void onFocusChange(View v, boolean hasFocus) {

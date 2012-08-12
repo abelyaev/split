@@ -164,7 +164,7 @@ public class ResourceActivity extends Activity {
 				try {
 					JSONObject response = new JSONObject(client.execute(request, responseHandler));
 					JSONObject html = (JSONObject)response.getJSONArray("nodes").get(0);
-					String html_str = html.getString("html");
+					String html_str = html.getString("html").replace("Â ", "");
 					
 					Message msg = h.obtainMessage(0);
 					data = new Bundle();

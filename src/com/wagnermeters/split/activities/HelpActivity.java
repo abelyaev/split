@@ -19,6 +19,7 @@ import android.widget.TextView;
 
 import com.wagnermeters.split.R;
 import com.wagnermeters.split.cproviders.SplitProvider;
+import com.wagnermeters.split.feedback.FeedbackActivity;
 
 public class HelpActivity extends Activity implements Serializable {
 
@@ -37,11 +38,16 @@ public class HelpActivity extends Activity implements Serializable {
 		public void bindView(View view, Context context, Cursor cursor) {
 			LinearLayout list_item = (LinearLayout)view;
 			
+			list_item.setId(cursor.getInt(1));
 			list_item.setTag(cursor.getInt(1));
 			list_item.setOnClickListener(new View.OnClickListener() {
 
 				public void onClick(View v) {
-					((HelpHostActivity)getParent()).shareTab("Resource", ResourceActivity.class, (Integer)v.getTag());
+					if(v.getId() != 0) {
+						((HelpHostActivity)getParent()).shareTab("Resource", ResourceActivity.class, (Integer)v.getTag());
+					} else {
+						((HelpHostActivity)getParent()).shareTab("Resource", FeedbackActivity.class, 0);
+					}
 				}
 
 			});

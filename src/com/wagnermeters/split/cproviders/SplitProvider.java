@@ -37,6 +37,8 @@ public class SplitProvider extends ContentProvider {
 		
 		public static final int LOOKUP_ARTICLE_ID = 29686;
 		
+		public static final int FEEDBACK_ARTICLE_ID = 29688;
+		
 		public static final String EMC2TEMP_TABLE_CREATE = "CREATE TABLE " + EMC2TEMP_TABLE + " (_id INTEGER PRIMARY KEY AUTOINCREMENT, h INTEGER, T INTEGER, M INTEGER)";
 		
 		public static final String CATEGORIES_TABLE_CREATE = "CREATE TABLE " + CATEGORIES_TABLE + " (_id INTEGER PRIMARY KEY AUTOINCREMENT, backend_id INTEGER, title TEXT, deleted INT DEFAULT 0, type TEXT)";
@@ -234,6 +236,7 @@ public class SplitProvider extends ContentProvider {
 		db = new SplitDbHelper(context).getWritableDatabase();
 		
 		db.execSQL("INSERT INTO " + SplitDbHelper.ARTICLES_TABLE + " (_id, backend_id, category_id, section, title, teaser, link, deleted) VALUES (" + SplitDbHelper.LOOKUP_ARTICLE_ID + ", 0, 0, 'wm', 'SG Look up Table', '', " + R.drawable.lookup + ", 0)");
+		db.execSQL("INSERT INTO " + SplitDbHelper.ARTICLES_TABLE + " (_id, backend_id, category_id, section, title, teaser, link, deleted) VALUES (" + SplitDbHelper.FEEDBACK_ARTICLE_ID + ", 0, 0, 'help', 'Send Feedback', '', '', 0)");
 	}
 	
 }
