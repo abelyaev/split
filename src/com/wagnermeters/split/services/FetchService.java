@@ -23,6 +23,8 @@ import com.wagnermeters.split.cproviders.SplitProvider;
 import java.io.IOException;
 import java.util.Timer;
 import java.util.TimerTask;
+
+import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.ResponseHandler;
@@ -34,24 +36,24 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class FetchService extends Service {
-	
+
 	NotificationManager nm;
-	
+
 	private final String LAST_RC_PREF = "last_RC_sync";
-	
+
 	private final int REFRESH_PERIOD = 3;
-	
+
 	Timer t;
 
 	public IBinder onBind(Intent arg0) {
 		return null;
 	}
-	
+
 	public void onCreate() {
 		nm = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
-		
+
 		final Handler h = new Handler() {
-			
+
 			public void handleMessage(Message msg) {
 				Bundle notifications = msg.getData();
 				if(notifications != null) {
@@ -63,19 +65,19 @@ public class FetchService extends Service {
 					}
 				}
 			}
-			
+
 		};
-		
+
 		t = new Timer();
 		t.schedule(new TimerTask() {
-			
+
 			private String base_uri = "http://woodapp.moisturemeters.com/sync/";
 
 			private long last_sync;
 
 			public void run() {
 				Bundle notifications = null;
-				
+
 				NetworkInfo info = ((ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE)).getActiveNetworkInfo();
 			    boolean connected = info != null ? info.isConnected() : false;
 			    if(!connected) {
@@ -86,9 +88,14 @@ public class FetchService extends Service {
 				last_sync = prefs.getLong(LAST_RC_PREF, 0);
 				HttpClient client = new DefaultHttpClient();
 				HttpGet request = new HttpGet(base_uri + Long.toString(last_sync));
-				ResponseHandler<String> responseHandler = new BasicResponseHandler();
 				try {
-					JSONObject response = new JSONObject(client.execute(request, responseHandler));
+					HttpResponse resp = client.execute(request);
+					if(resp.getStatusLine().getStatusCode() != 200) {
+						return;
+					}
+
+					ResponseHandler<String> responseHandler = new BasicResponseHandler();
+					JSONObject response = new JSONObject(responseHandler.handleResponse(resp));
 					Cursor c;
 
 					JSONArray categories = response.getJSONArray("categories");
@@ -102,7 +109,7 @@ public class FetchService extends Service {
 						values.put("title", category.getString("title"));
 						values.put("deleted", category.getInt("deleted"));
 						values.put("type", "categories");
-						
+
 						c = getContentResolver().query(
 							SplitProvider.CATEGORIES_URI,
 							new String[] {"_id"},
@@ -122,7 +129,7 @@ public class FetchService extends Service {
 						}
 						c.close();
 					}
-					
+
 					categories = response.getJSONArray("jobtypes");
 					length = categories.length();
 					for(int i = 0; i < length; i++) {
@@ -132,7 +139,7 @@ public class FetchService extends Service {
 						values.put("title", category.getString("title"));
 						values.put("deleted", 0);
 						values.put("type", "jobtypes");
-						
+
 						c = getContentResolver().query(
 							SplitProvider.CATEGORIES_URI,
 							new String[] {"_id"},
@@ -152,7 +159,7 @@ public class FetchService extends Service {
 						}
 						c.close();
 					}
-					
+
 					JSONArray articles = response.getJSONArray("articles");
 					JSONObject article;
 					length = articles.length();
@@ -198,7 +205,7 @@ public class FetchService extends Service {
 						values.put("teaser", article.getString("teaser"));
 						values.put("link", article.getString("link"));
 						values.put("deleted", article.getInt("deleted"));
-						
+
 						c = getContentResolver().query(
 							SplitProvider.ARTICLES_URI,
 							new String[] {"_id"},
@@ -208,7 +215,7 @@ public class FetchService extends Service {
 						);
 						if(c.getCount() == 0) {
 							getContentResolver().insert(SplitProvider.ARTICLES_URI, values);
-							
+
 							if(last_sync != 0) {
 								String[] notification = new String[] {
 									Integer.toString(article.getInt("section_id")),
@@ -233,7 +240,7 @@ public class FetchService extends Service {
 				} catch (IOException e) {
 				} catch (JSONException e) {
 				}
-				
+
 				SharedPreferences.Editor editor = prefs.edit();
 				editor.putLong(LAST_RC_PREF, System.currentTimeMillis() / 1000);
 				editor.commit();
@@ -242,14 +249,14 @@ public class FetchService extends Service {
 				msg.setData(notifications);
 				h.sendMessage(msg);
 			}
-			
+
 		}, 0, REFRESH_PERIOD * 60 * 1000);
     }
-	
+
 	public void onDestroy() {
 		t.cancel();
 	}
-	
+
 	private void showNotification(String[] notification_data) {
 		int section = Integer.parseInt(notification_data[0]);
 		int r_id = Integer.parseInt(notification_data[1]);
@@ -277,7 +284,7 @@ public class FetchService extends Service {
 				intent = new Intent(Intent.ACTION_VIEW);
 				intent.setData(Uri.parse(notification_data[3]));
 		}
-		
+
         Notification notification = new Notification(R.drawable.icon_notify, title, System.currentTimeMillis());
         int id = (int)(Math.random() * 1000);
         intent.putExtra("n_id", id);

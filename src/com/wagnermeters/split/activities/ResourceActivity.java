@@ -3,6 +3,7 @@ package com.wagnermeters.split.activities;
 import java.io.IOException;
 import java.util.Random;
 
+import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.ResponseHandler;
@@ -35,9 +36,9 @@ import com.wagnermeters.split.cproviders.SplitProvider;
 import com.wagnermeters.split.activities.RCHostActivity;
 
 public class ResourceActivity extends Activity {
-	
+
 	private int pid;
-	
+
 	private class SplitWebViewClient extends WebViewClient {
 
 	    public boolean shouldOverrideUrlLoading(WebView view, String url) {
@@ -49,7 +50,7 @@ public class ResourceActivity extends Activity {
 
 	        return true;
 	    }
-	    
+
 	    public void onPageFinished(WebView view, String url) {
 	    	if(view.getTag().equals("ready")) {
 	    		view.setVisibility(View.VISIBLE);
@@ -57,27 +58,27 @@ public class ResourceActivity extends Activity {
 	    }
 
 	}
-	
+
 	public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.resource);
-        
+
         int id = getIntent().getIntExtra("id", 0);
         pid = getIntent().getIntExtra("pid", 0);
         updateInterface(id);
-        
+
         ((WebView)findViewById(R.id.full)).setWebViewClient(new SplitWebViewClient());
         ((WebView)findViewById(R.id.full)).setBackgroundColor(0);
 	}
-	
+
 	public void onNewIntent(Intent intent) {
 		super.onNewIntent(intent);
-		
+
 		int id = intent.getIntExtra("id", 0);
 		pid = intent.getIntExtra("pid", 0);
 		updateInterface(id);
 	}
-	
+
 	private void updateInterface(final int id) {
         Cursor c = getContentResolver().query(
 			SplitProvider.RC_ARTICLE_URI,
@@ -97,7 +98,7 @@ public class ResourceActivity extends Activity {
         	);
         }
         c.moveToFirst();
-        
+
         ((TextView)findViewById(R.id.title)).setText(c.getString(0));
 
         //((TextView)findViewById(R.id.teaser)).setText(c.getString(1));
@@ -107,17 +108,17 @@ public class ResourceActivity extends Activity {
         full.setVisibility(View.GONE);
         full.setTag("not-ready");
         full.loadData("<style>a{color:#BF7C08!important} h2{display:none} div.field-name-field-problem, div.field-name-field-tags{display:none}</style><div style=\"color:white!important;\">" + c.getString(1) + "</div>", "text/html", null);
-        
+
         //findViewById(R.id.read_more).setVisibility(View.GONE);
-        
+
         final ProgressDialog d = new ProgressDialog(this.getParent());
-        
+
         final Handler h = new Handler() {
-			
+
 			public void handleMessage(Message msg) {
 				d.dismiss();
 				WebView full = (WebView)findViewById(R.id.full);
-				
+
 				if(msg.what == 0) {
 					String html = msg.getData().getString("html");
 
@@ -134,38 +135,44 @@ public class ResourceActivity extends Activity {
 				} else {
 					Toast.makeText(getParent(), getString(R.string.online), Toast.LENGTH_LONG).show();
 				}
-				
+
 				full.setTag("ready");
 				full.reload();
 			}
-			
+
 		};
-		
+
 		Thread t = new Thread(new Runnable() {
-			
+
 			private String base_uri = "http://woodapp.moisturemeters.com/nodehtml/";
 
 			public void run() {
 				Bundle data = null;
-				
+
 				NetworkInfo info = ((ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE)).getActiveNetworkInfo();
 			    boolean connected = info != null ? info.isConnected() : false;
 			    if(!connected) {
 			    	h.sendMessage(h.obtainMessage(1));
-			    	
+
 			    	return;
 			    }
 
 				HttpClient client = new DefaultHttpClient();
 				Random randomGenerator = new Random();
 				HttpGet request = new HttpGet(base_uri + Integer.toString(id) + "/" + Integer.toString(randomGenerator.nextInt(10000)));
-				//request.setHeader("Cache-Control", "no-cache, no-store");
-				ResponseHandler<String> responseHandler = new BasicResponseHandler();
 				try {
-					JSONObject response = new JSONObject(client.execute(request, responseHandler));
+					HttpResponse resp = client.execute(request);
+					if(resp.getStatusLine().getStatusCode() != 200) {
+						h.sendMessage(h.obtainMessage(1));
+
+						return;
+					}
+
+					ResponseHandler<String> responseHandler = new BasicResponseHandler();
+					JSONObject response = new JSONObject(responseHandler.handleResponse(resp));
 					JSONObject html = (JSONObject)response.getJSONArray("nodes").get(0);
 					String html_str = html.getString("html").replace("Â ", "");
-					
+
 					Message msg = h.obtainMessage(0);
 					data = new Bundle();
 					data.putString("html", html_str);
@@ -182,15 +189,15 @@ public class ResourceActivity extends Activity {
 					e.printStackTrace();
 				}
 			}
-			
+
 		});
 
 		d.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 		d.setCancelable(false);
 		d.show();
-		
+
 		t.start();
-        
+
         findViewById(R.id.back).setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				switch(pid) {
@@ -206,7 +213,7 @@ public class ResourceActivity extends Activity {
 				}
 			}
 		});
-        
+
         findViewById(R.id.read_more).setTag(c.getString(2));
         findViewById(R.id.read_more).setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
@@ -215,10 +222,10 @@ public class ResourceActivity extends Activity {
 				startActivity(intent);
 			}
 		});
-        
+
         c.close();
 	}
-	
+
 	public void onBackPressed() {
 		switch(pid) {
 			case 0:
