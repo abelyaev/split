@@ -51,7 +51,7 @@ public class FeedbackActivity extends Activity {
 								"WoodH2O for Android Feedback",
 								body.getText().toString(),
 								"woodh2oandroid@gmail.com",
-								"abel.the.first@gmail.com"
+								"info@wagnermeters.com"
 						);
 						body.setText("");
 					}
@@ -93,7 +93,7 @@ public class FeedbackActivity extends Activity {
 								"WoodH2O for Android Feedback",
 								body.getText().toString(),
 								"woodh2oandroid@gmail.com",
-								"abel.the.first@gmail.com"
+								"info@wagnermeters.com"
 						);
 						body.setText("");
 					}
